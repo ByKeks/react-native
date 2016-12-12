@@ -15,6 +15,7 @@
   BOOL _initialRefreshingState;
   BOOL _isInitialRender;
   BOOL _currentRefreshingState;
+  float _progressViewOffset;
 }
 
 - (instancetype)init
@@ -32,6 +33,18 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 - (void)layoutSubviews
 {
   [super layoutSubviews];
+
+  // UIRefreshControl is managed so avoid changing it directly
+  // This method may break in future versions of iOS (subview structure may change)
+   // And self.transform won't shift title text
+   if(_isInitialRender) {
+     UIView *subview = self.subviews.firstObject;
+     if(subview != nil) {
+       CGRect rect = subview.bounds;
+       rect.origin.y = -_progressViewOffset;
+       subview.bounds = rect;
+     }
+   }
 
   // If the control is refreshing when mounted we need to call
   // beginRefreshing in layoutSubview or it doesn't work.
@@ -122,6 +135,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
       [self endRefreshing];
     }
   }
+}
+
+- (void)setProgressViewOffset:(float)offset
+{
+  _progressViewOffset = offset;
 }
 
 - (void)refreshControlValueChanged
