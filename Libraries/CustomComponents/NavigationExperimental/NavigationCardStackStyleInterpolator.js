@@ -93,15 +93,12 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
     outputRange: ([1, 1, 0.3]: Array<number>),
   });
 
-  const scale = position.interpolate({
-    inputRange,
-    outputRange: ([1, 1, 0.95]: Array<number>),
-  });
+  const scale = 1;
 
   const translateY = 0;
   const translateX = position.interpolate({
     inputRange,
-    outputRange: ([width, 0, -10]: Array<number>),
+    outputRange: ([width, 0, -100]: Array<number>),
   });
 
   return {
